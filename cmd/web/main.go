@@ -7,6 +7,14 @@ import (
 	"os"
 )
 
+// Define an application struct to hold the application-wide dependencies for the
+// web application. For now we'll only include fields for the two custom loggers, but
+// we'll add more to it as the build progresses.
+type application struct {
+	errorlog *log.Logger
+	infolog  *log.Logger
+}
+
 func main() {
 
 	// Define a new command-line flag with the name 'addr', a default value of ":4000"
@@ -31,12 +39,18 @@ func main() {
 	// the destination and use the log.Lshortfile flag to include the relevant
 	// file name and line number.
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
+	// Initialize a new instance of our application struct, containing the
+	// dependencies.
+	app := &application{
+		errorlog: errorLog,
+		infolog:  infoLog,
+	}
 	mux := http.NewServeMux()
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
 	mux.Handle("/static/", http.StripPrefix("/static", fileServer))
-	mux.HandleFunc("/", home)
-	mux.HandleFunc("/snippet/view", snippetView)
-	mux.HandleFunc("/snippet/create", snippetCreate)
+	mux.HandleFunc("/", app.home)
+	mux.HandleFunc("/snippet/view", app.snippetView)
+	mux.HandleFunc("/snippet/create", app.snippetCreate)
 
 	// The value returned from the flag.String() function is a pointer to the flag
 	// value, not the value itself. So we need to dereference the pointer (i.e.
