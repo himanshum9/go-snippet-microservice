@@ -8,14 +8,19 @@ import (
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/himanshum9/go-snippet/internal/models"
 )
 
 // Define an application struct to hold the application-wide dependencies for the
 // web application. For now we'll only include fields for the two custom loggers, but
 // we'll add more to it as the build progresses.
+
+// Add a snippets field to the application struct. This will allow us to
+// make the SnippetModel object available to our handlers.
 type application struct {
-	errorlog *log.Logger
-	infolog  *log.Logger
+	errorlog     *log.Logger
+	infolog      *log.Logger
+	snippetModel *models.SnippetModel
 }
 
 func main() {
@@ -62,9 +67,13 @@ func main() {
 
 	// Initialize a new instance of our application struct, containing the
 	// dependencies.
+
+	// Initialize a models.SnippetModel instance and add it to the application
+	// dependencies.
 	app := &application{
-		errorlog: errorLog,
-		infolog:  infoLog,
+		errorlog:     errorLog,
+		infolog:      infoLog,
+		snippetModel: &models.SnippetModel{DB: db},
 	}
 	// The value returned from the flag.String() function is a pointer to the flag
 	// value, not the value itself. So we need to dereference the pointer (i.e.
