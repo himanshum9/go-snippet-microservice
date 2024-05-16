@@ -34,8 +34,8 @@ func main() {
 	dsn := flag.String("dsn", "web:root@/snippetbox?parseTime=true", "MySQL data source name")
 
 	// Importantly, we use the flag.Parse() function to parse the command-line flag.
-	// This reads in the command-line flag value and assigns it to the addr
-	// variable. You need to call this *before* you use the addr variable
+	// This reads in the command-line flag value and assigns it to the addr and dsn
+	// variable. You need to call this *before* you use the addr and dsn variable
 	// otherwise it will always contain the default value of ":4000". If any errors are
 	// encountered during parsing the application will be terminated.
 	flag.Parse()
