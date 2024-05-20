@@ -55,6 +55,7 @@ func (m *SnippetModel) Insert(title string, content string, expires int) (int, e
 
 // This will return a specific snippet based on its id.
 func (m *SnippetModel) Get(id int) (*Snippet, error) {
+
 	// Write the SQL statement we want to execute. Again, I've split it over two
 	// lines for readability.
 	stmt := `SELECT id, title, content, created, expires FROM snippets
@@ -83,6 +84,8 @@ func (m *SnippetModel) Get(id int) (*Snippet, error) {
 			return nil, err
 		}
 	}
+	// fmt.Println("Himamshu")
+
 	// If everything went OK then return the Snippet object.
 	return s, nil
 
