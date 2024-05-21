@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"html/template"
 	"net/http"
 	"strconv"
 
@@ -15,25 +14,33 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		app.notFound(w)
 		return
 	}
-	files := []string{
-		"./ui/html/base.tmpl",
-		"./ui/html/partials/nav.tmpl",
-		"./ui/html/pages/home.tmpl",
-	}
-	ts, err := template.ParseFiles(files...)
+	snippets, err := app.snippetModel.Latest()
 	if err != nil {
-		// Because the home handler function is now a method against application
-		// it can access its fields, including the error logger. We'll write the log
-		// message to this instead of the standard logger.
-		// app.errorlog.Println(err.Error())
 		app.serverError(w, err)
+		return
 	}
-	err = ts.ExecuteTemplate(w, "base", nil)
-	if err != nil {
-		// app.errorlog.Println(err.Error())
-		app.serverError(w, err)
-		// http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	for _, snippet := range snippets {
+		fmt.Fprintf(w, "%+v\n", snippet)
 	}
+	// files := []string{
+	// 	"./ui/html/base.tmpl",
+	// 	"./ui/html/partials/nav.tmpl",
+	// 	"./ui/html/pages/home.tmpl",
+	// }
+	// ts, err := template.ParseFiles(files...)
+	// if err != nil {
+	// 	// Because the home handler function is now a method against application
+	// 	// it can access its fields, including the error logger. We'll write the log
+	// 	// message to this instead of the standard logger.
+	// 	// app.errorlog.Println(err.Error())
+	// 	app.serverError(w, err)
+	// }
+	// err = ts.ExecuteTemplate(w, "base", nil)
+	// if err != nil {
+	// 	// app.errorlog.Println(err.Error())
+	// 	app.serverError(w, err)
+	// 	// http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	// }
 }
 
 // Change the signature of the snippetView handler so it is defined as a method
