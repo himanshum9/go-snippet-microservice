@@ -20,28 +20,30 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
-	for _, snippet := range snippets {
-		fmt.Fprintf(w, "%+v\n", snippet)
+	// Create an instance of a templateData struct holding the slice of snippets.
+	data := &templateData{
+		Snippets: snippets,
 	}
-	// files := []string{
-	// 	"./ui/html/base.tmpl",
-	// 	"./ui/html/partials/nav.tmpl",
-	// 	"./ui/html/pages/home.tmpl",
-	// }
-	// ts, err := template.ParseFiles(files...)
-	// if err != nil {
-	// 	// Because the home handler function is now a method against application
-	// 	// it can access its fields, including the error logger. We'll write the log
-	// 	// message to this instead of the standard logger.
-	// 	// app.errorlog.Println(err.Error())
-	// 	app.serverError(w, err)
-	// }
-	// err = ts.ExecuteTemplate(w, "base", nil)
-	// if err != nil {
-	// 	// app.errorlog.Println(err.Error())
-	// 	app.serverError(w, err)
-	// 	// http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-	// }
+
+	files := []string{
+		"./ui/html/base.tmpl",
+		"./ui/html/partials/nav.tmpl",
+		"./ui/html/pages/home.tmpl",
+	}
+	ts, err := template.ParseFiles(files...)
+	if err != nil {
+		// Because the home handler function is now a method against application
+		// it can access its fields, including the error logger. We'll write the log
+		// message to this instead of the standard logger.
+		// app.errorlog.Println(err.Error())
+		app.serverError(w, err)
+	}
+	err = ts.ExecuteTemplate(w, "base", data)
+	if err != nil {
+		// app.errorlog.Println(err.Error())
+		app.serverError(w, err)
+		// http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
 }
 
 // Change the signature of the snippetView handler so it is defined as a method
@@ -63,6 +65,11 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Create an instance of a templateData struct holding the snippet data.
+	data := &templateData{
+		Snippet: s,
+	}
+
 	files := []string{
 		"./ui/html/base.tmpl",
 		"./ui/html/partials/nav.tmpl",
@@ -77,7 +84,7 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 		// 	// app.errorlog.Println(err.Error())
 		app.serverError(w, err)
 	}
-	err = ts.ExecuteTemplate(w, "base", s)
+	err = ts.ExecuteTemplate(w, "base", data)
 
 	if err != nil {
 		// app.errorlog.Println(err.Error())
