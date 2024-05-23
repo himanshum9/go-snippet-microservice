@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"html/template"
 	"net/http"
 	"strconv"
 
@@ -25,25 +24,8 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		Snippets: snippets,
 	}
 
-	files := []string{
-		"./ui/html/base.tmpl",
-		"./ui/html/partials/nav.tmpl",
-		"./ui/html/pages/home.tmpl",
-	}
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		// Because the home handler function is now a method against application
-		// it can access its fields, including the error logger. We'll write the log
-		// message to this instead of the standard logger.
-		// app.errorlog.Println(err.Error())
-		app.serverError(w, err)
-	}
-	err = ts.ExecuteTemplate(w, "base", data)
-	if err != nil {
-		// app.errorlog.Println(err.Error())
-		app.serverError(w, err)
-		// http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-	}
+	app.render(w, http.StatusOK, "home.tmpl", data)
+
 }
 
 // Change the signature of the snippetView handler so it is defined as a method
@@ -70,27 +52,7 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 		Snippet: s,
 	}
 
-	files := []string{
-		"./ui/html/base.tmpl",
-		"./ui/html/partials/nav.tmpl",
-		"./ui/html/pages/view.tmpl",
-	}
-
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		// 	// Because the home handler function is now a method against application
-		// 	// it can access its fields, including the error logger. We'll write the log
-		// 	// message to this instead of the standard logger.
-		// 	// app.errorlog.Println(err.Error())
-		app.serverError(w, err)
-	}
-	err = ts.ExecuteTemplate(w, "base", data)
-
-	if err != nil {
-		// app.errorlog.Println(err.Error())
-		app.serverError(w, err)
-		// http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-	}
+	app.render(w, http.StatusOK, "view.tmpl", data)
 }
 func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {

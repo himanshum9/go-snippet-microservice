@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"flag"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -17,10 +18,13 @@ import (
 
 // Add a snippets field to the application struct. This will allow us to
 // make the SnippetModel object available to our handlers.
+// Add a templateCache field to the application struct.
+
 type application struct {
-	errorlog     *log.Logger
-	infolog      *log.Logger
-	snippetModel *models.SnippetModel
+	errorlog      *log.Logger
+	infolog       *log.Logger
+	snippetModel  *models.SnippetModel
+	templateCache map[string]*template.Template
 }
 
 func main() {
@@ -65,15 +69,22 @@ func main() {
 
 	defer db.Close()
 
+	// Initialize a new template cache...
+	templateCache, err := newTemplateCache()
+	if err != nil {
+		errorLog.Fatal(err)
+	}
+
 	// Initialize a new instance of our application struct, containing the
 	// dependencies.
 
 	// Initialize a models.SnippetModel instance and add it to the application
 	// dependencies.
 	app := &application{
-		errorlog:     errorLog,
-		infolog:      infoLog,
-		snippetModel: &models.SnippetModel{DB: db},
+		errorlog:      errorLog,
+		infolog:       infoLog,
+		snippetModel:  &models.SnippetModel{DB: db},
+		templateCache: templateCache,
 	}
 	// The value returned from the flag.String() function is a pointer to the flag
 	// value, not the value itself. So we need to dereference the pointer (i.e.
