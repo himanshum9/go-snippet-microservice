@@ -19,10 +19,12 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
-	// Create an instance of a templateData struct holding the slice of snippets.
-	data := &templateData{
-		Snippets: snippets,
-	}
+
+	// Call the newTemplateData() helper to get a templateData struct containing
+	// the 'default' data (which for now is just the current year), and add the
+	// snippets slice to it.
+	data := app.newTemplateData(r)
+	data.Snippets = snippets
 
 	app.render(w, http.StatusOK, "home.tmpl", data)
 
@@ -47,10 +49,9 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Create an instance of a templateData struct holding the snippet data.
-	data := &templateData{
-		Snippet: s,
-	}
+	// And do the same thing again here...
+	data := app.newTemplateData(r)
+	data.Snippet = s
 
 	app.render(w, http.StatusOK, "view.tmpl", data)
 }
