@@ -49,7 +49,7 @@ func newTemplateCache() (map[string]*template.Template, error) {
 		// create an empty template set, use the Funcs() method to register the
 		// template.FuncMap, and then parse the file as normal.
 
-		ts, err := template.New(name).Funcs(functions).ParseFiles("./ui/html/baae.tmpl")
+		ts, err := template.New(name).Funcs(functions).ParseFiles("./ui/html/base.tmpl")
 
 		// ts, err := template.ParseFiles("./ui/html/base.tmpl")
 		if err != nil {
@@ -76,5 +76,5 @@ func newTemplateCache() (map[string]*template.Template, error) {
 // Create a humanDate function which returns a nicely formatted string
 // representation of a time.Time object.
 func humanDate(t time.Time) string {
-	return t.Format("02 Jan 2024")
+	return t.Format("02 Jan 2006 at 15:04")
 }

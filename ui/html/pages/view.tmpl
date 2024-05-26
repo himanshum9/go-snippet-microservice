@@ -8,8 +8,8 @@
             </div>
             <pre><code>{{.Content}}}</code></pre>
             <div class='metadata'>
-                <time>Created: {{HumanDate .Created}}</time>
-                <time>Expires: {{HumanDate .Expires}}</time>
+                <time>Created: {{humanDate .Created}} {{.Created.Weekday}}</time>
+                <time>Expires: {{humanDate .Expires}}</time>
             </div>
         </div>
     {{end}}
