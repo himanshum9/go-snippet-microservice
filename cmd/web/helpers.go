@@ -15,6 +15,7 @@ func (app *application) newTemplateData(r *http.Request) *templateData {
 	return &templateData{
 		CurrentYear: time.Now().Year(),
 	}
+
 }
 
 // The serverError helper writes an error message and stack trace to the errorLog,
