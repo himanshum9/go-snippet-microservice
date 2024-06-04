@@ -10,7 +10,6 @@ import (
 // Update the signature for the routes() method so that it returns a
 // http.Handler instead of *http.ServeMux.
 func (app *application) routes() http.Handler {
-
 	// Initialize the router.
 	router := httprouter.New()
 
