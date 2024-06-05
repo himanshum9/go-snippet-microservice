@@ -84,7 +84,6 @@ func (m *SnippetModel) Get(id int) (*Snippet, error) {
 		}
 	}
 	// fmt.Println("Himamshu")
-
 	// If everything went OK then return the Snippet object.
 	return s, nil
 
