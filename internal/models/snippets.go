@@ -103,7 +103,6 @@ func (m *SnippetModel) Latest() ([]*Snippet, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	// We defer rows.Close() to ensure the sql.Rows resultset is
 	// always properly closed before the Latest() method returns. This defer
 	// statement should come *after* you check for an error from the Query()
