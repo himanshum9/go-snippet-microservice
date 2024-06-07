@@ -109,7 +109,6 @@ func (m *SnippetModel) Latest() ([]*Snippet, error) {
 	// method. Otherwise, if Query() returns an error, you'll get a panic
 	// trying to close a nil resultset.
 	defer rows.Close()
-
 	// Initialize an empty slice to hold the Snippet structs.
 	snippets := []*Snippet{}
 
