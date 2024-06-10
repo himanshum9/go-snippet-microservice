@@ -35,6 +35,7 @@ func (app *application) routes() http.Handler {
 	// Create the middleware chain as normal.
 	standard := alice.New(app.recoverPanic, app.logRequest, secureHeaders)
 	// Wrap the router with the middleware and return it as normal.
+
 	return standard.Then(router)
 
 	// mux := http.NewServeMux()
