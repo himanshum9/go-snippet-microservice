@@ -21,10 +21,12 @@ var functions = template.FuncMap{
 // At the moment it only contains one field, but we'll add more
 // to it as the build progresses.
 // adding current year in template data as it is needed in all my web pages.
+// Add a Form field with the type "any".
 type templateData struct {
 	CurrentYear int
 	Snippet     *models.Snippet
 	Snippets    []*models.Snippet
+	Form        any
 }
 
 func newTemplateCache() (map[string]*template.Template, error) {
