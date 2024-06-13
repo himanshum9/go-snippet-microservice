@@ -9,6 +9,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/himanshum9/go-snippet/internal/models"
+	"github.com/himanshum9/go-snippet/internal/validator"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -17,11 +18,16 @@ import (
 // exported (i.e. start with a capital letter). This is because struct fields
 // must be exported in order to be read by the html/template package when
 // rendering the template.
+
+// Remove the explicit FieldErrors struct field and instead embed the Validator
+// type. Embedding this means that our snippetCreateForm "inherits" all the
+// fields and methods of our Validator type (including the FieldErrors field).
 type snippetCreateForm struct {
-	Title       string
-	Content     string
-	Expires     int
-	FieldErrors map[string]string
+	Title   string
+	Content string
+	Expires int
+	validator.Validator
+	//FieldErrors map[string]string
 }
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
@@ -120,11 +126,23 @@ func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request
 	// Create an instance of the snippetCreateForm struct containing the values
 	// from the form and an empty map for any validation errors.
 	form := snippetCreateForm{
-		Title:       r.PostForm.Get("title"),
-		Content:     r.PostForm.Get("content"),
-		Expires:     expires,
-		FieldErrors: map[string]string{},
+		Title:   r.PostForm.Get("title"),
+		Content: r.PostForm.Get("content"),
+		Expires: expires,
+		// FieldErrors: map[string]string{},
 	}
+
+	// Because the Validator type is embedded by the snippetCreateForm struct,
+	// we can call CheckField() directly on it to execute our validation checks.
+	// CheckField() will add the provided key and error message to the
+	// FieldErrors map if the check does not evaluate to true. For example, in
+	// the first line here we "check that the form.Title field is not blank". In
+	// the second, we "check that the form.Title field has a maximum character
+	// length of 100" and so on.
+	form.CheckField(validator.NotBlank(form.Title), "title", "This field cannot be blank")
+	form.CheckField(validator.MaxChars(form.Title, 100), "title", "This field cannot be more than 100 characters long")
+	form.CheckField(validator.NotBlank(form.Content), "content", "This field cannot be blank")
+	form.CheckField(validator.PermittedInt(form.Expires, 1, 7, 365), "expires", "This field must equal 1, 7 or 365")
 
 	// Initialize a map to hold any validation errors for the form fields.
 	// fieldErrors := make(map[string]string)
