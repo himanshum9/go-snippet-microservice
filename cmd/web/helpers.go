@@ -46,6 +46,7 @@ func (app *application) render(w http.ResponseWriter, status int, page string, d
 	// name (like 'home.tmpl'). If no entry exists in the cache with the
 	// provided name, then create a new error and call the serverError() helper
 	// method that we made earlier and return.
+	
 	ts, ok := app.templateCache[page]
 
 	if !ok {
@@ -76,3 +77,5 @@ func (app *application) render(w http.ResponseWriter, status int, page string, d
 	// takes an io.Writer.
 	buf.WriteTo(w)
 }
+
+
