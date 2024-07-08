@@ -102,7 +102,6 @@ func main() {
 		ErrorLog: errorLog,
 		Handler:  app.routes(),
 	}
-
 	err = srv.ListenAndServe()
 	errorLog.Fatal(err)
 }
