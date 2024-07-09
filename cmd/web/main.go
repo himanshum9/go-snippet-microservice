@@ -95,6 +95,7 @@ func main() {
 	// that the server uses the same network address and routes as before, and set
 	// the ErrorLog field so that the server now uses the custom errorLog logger in
 	// the event of any problems.
+
 	srv := &http.Server{
 		Addr:     *addr,
 		ErrorLog: errorLog,
