@@ -18,6 +18,7 @@ import (
 
 // Add a snippets field to the application struct. This will allow us to
 // make the SnippetModel object available to our handlers.
+
 // Add a templateCache field to the application struct.
 
 type application struct {
